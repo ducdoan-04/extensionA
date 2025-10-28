@@ -1,62 +1,53 @@
-// Lưu key
+// popup.js
 document.getElementById('save').onclick = () => {
   const key = document.getElementById('apiKey').value.trim();
   if (key && key.startsWith('AIza')) {
     chrome.storage.sync.set({ geminiKey: key }, () => {
-      alert('ĐÃ LƯU KEY THÀNH CÔNG!');
+      showStatus('ĐÃ LƯU KEY!', 'green');
     });
   } else {
-    alert('Key không hợp lệ!');
+    showStatus('Key không hợp lệ!', 'red');
   }
 };
 
+function showStatus(msg, color) {
+  const el = document.getElementById('status');
+  el.textContent = msg;
+  el.style.color = color;
+  setTimeout(() => el.textContent = '', 3000);
+}
+
 // Tải key
 chrome.storage.sync.get('geminiKey', (data) => {
-  if (data.geminiKey) document.getElementById('apiKey').value = data.geminiKey;
+  if (data.geminiKey) {
+    document.getElementById('apiKey').value = data.geminiKey;
+    showStatus('Key đã sẵn sàng', 'green');
+  }
 });
 
 // Test API
 document.getElementById('test').onclick = async () => {
-  chrome.storage.sync.get('geminiKey', async (data) => {
-    const key = data.geminiKey;
-    if (!key) return alert('Chưa lưu key!');
+  const { geminiKey } = await chrome.storage.sync.get('geminiKey');
+  if (!geminiKey) return showStatus('Chưa lưu key!', 'red');
 
-    try {
-      const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${key}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [
-              {
-                parts: [
-                  { text: "Giải nhanh phép tính: 1 + 1 = ?" }
-                ]
-              }
-            ],
-            generationConfig: { 
-              maxOutputTokens: 50,
-              temperature: 0.3
-            }
-          })
-        }
-      );
+  try {
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${geminiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ role: 'user', parts: [{ text: '1 + 1 = ?' }] }],
+          generationConfig: { maxOutputTokens: 10 }
+        })
+      }
+    );
 
-      const json = await res.json();
-      console.log("Gemini full response:", json);
-
-      // Lấy phần text trả về (tuỳ theo kiểu dữ liệu)
-      const ans =
-        json?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ||
-        json?.candidates?.[0]?.output_text?.trim() ||
-        json?.output_text ||
-        json?.text ||
-        "(Không có phản hồi)";
-
-      alert(`GEMINI HOẠT ĐỘNG!\nTrả lời: ${ans}`);
-    } catch (e) {
-      alert('Lỗi: ' + e.message);
-    }
-  });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    const ans = json.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || 'OK';
+    showStatus(`GEMINI HOẠT ĐỘNG! → ${ans}`, 'green');
+  } catch (e) {
+    showStatus('Lỗi kết nối: ' + e.message, 'red');
+  }
 };

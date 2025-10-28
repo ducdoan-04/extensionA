@@ -10,13 +10,15 @@
     #save { background: #28a745; color: white; }
     #test { background: #0dcaf0; color: black; }
     a { color: #007bff; font-size: 12px; }
+    .status { font-size: 12px; margin-top: 5px; color: #666; }
   </style>
 </head>
 <body>
   <h3>Gemini API Key</h3>
   <input type="password" id="apiKey" placeholder="Dán key vào đây">
   <button id="save">LƯU KEY</button>
-  <button id="test">TEST GEMINI 1.5</button>
+  <button id="test">TEST GEMINI</button>
+  <div class="status" id="status"></div>
   <p>Lấy key miễn phí tại: <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com</a></p>
   <script src="popup.js"></script>
 </body>

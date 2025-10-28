@@ -3,12 +3,11 @@
   "name": "Azota Gemini Auto-Highlight",
   "version": "1.0",
   "description": "Tự động highlight đáp án đúng bằng Gemini AI",
-  "permissions": ["activeTab", "storage", "scripting"],
-  "host_permissions": [
-  "https://generativelanguage.googleapis.com/*",
+"permissions": ["activeTab", "storage", "scripting"],
+"host_permissions": [
   "https://my-gemini-proxy.ducdoan04-work.workers.dev/*",
   "https://azota.vn/*"
-  ],
+],
   "background": {
     "service_worker": "background.js"
   },
