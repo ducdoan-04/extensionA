@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Gemini Key</title>
+  <style>
+    body { font-family: system-ui, sans-serif; padding: 15px; width: 300px; }
+    input, button { width: 100%; padding: 10px; margin: 8px 0; border-radius: 8px; border: 1px solid #ddd; }
+    button { font-weight: bold; cursor: pointer; }
+    #save { background: #28a745; color: white; }
+    #test { background: #0dcaf0; color: black; }
+    a { color: #007bff; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <h3>Gemini API Key</h3>
+  <input type="password" id="apiKey" placeholder="Dán key vào đây">
+  <button id="save">LƯU KEY</button>
+  <button id="test">TEST GEMINI 1.5</button>
+  <p>Lấy key miễn phí tại: <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com</a></p>
+  <script src="popup.js"></script>
+</body>
+</html>
